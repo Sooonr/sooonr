@@ -4,6 +4,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Quote = require('./model/quote');
+var Follow = require('./model/follow');
 
 var app = express();
 var router = express.Router();
@@ -108,6 +109,39 @@ router.route('/quotes')
      }
  });
 
+
+ router.route('/follows')
+ //retrieve all followers from the database
+ .get(function(req, res) {
+     //looks at our Follow Schema
+     Follow.find(function(err, follows) {
+     if (err)
+       res.send(err);
+       //responds with a json object of our database quotes.
+       res.json(follows)
+       console.log("yeeees : ", follows);
+    });
+ })
+ .post(function(req, res) {
+  var follow = new Follow();
+  //body parser lets us use the req.body
+  follow.idUser = req.body.idUser;
+  follow.idArtist = req.body.idArtist;
+  console.log(follow);
+  if (follow.idUser && follow.idArtist) {
+     follow.save(function(err) {
+        if (err)
+          res.send(err);
+          res.json({ message: 'Follow successfully added!' });
+     });
+  } else {
+    res.json({ error: true, message: 'Missing parameters' });
+  }
+});
+
+
+
+ 
  
 
  
