@@ -4,6 +4,9 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Quote = require('./model/quote');
+var User = require('./model/user');
+var passport = require('passport')
+var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
 var router = express.Router();
@@ -57,7 +60,7 @@ router.delete('/:id',function(req, res) {
      const reqId = req.originalUrl.split('/')[3];
      const id = reqId.split('=')[1];
      var ObjectId = require('mongodb').ObjectID;
-     
+
      console.log(id);
      Quote.deleteOne({ "_id" : ObjectId(id) }, function(err, quotes) {
        if (err)
@@ -108,6 +111,57 @@ router.route('/quotes')
      }
  });
 
- 
+// Users
 
- 
+router.route('/login')
+  //login a user
+  .post(function(req, res) {
+    const username = req.body.username
+    const password = req.body.password
+
+    User.findOne({ username: username }, function(err, user) {
+      console.log("test : ", user);
+      if (err) { res.send(err) }
+      if (!user) {
+        res.send({error: true, message: 'Les identifiants sont incorrects'})
+      } else {
+          user.comparePassword(password, function(err, isMatch) {
+            if (err) res.send(err);
+            if (isMatch) {
+              res.send({error: false})
+            } else {
+              res.send({error: true, message: 'Les identifiants sont incorrects'})
+            }
+          });
+        }
+    });
+  });
+
+ router.route('/users')
+  //retrieve all users from the database
+  .get(function(req, res) {
+      //looks at our User Schema
+      User.find(function(err, users) {
+      if (err)
+        res.send(err);
+        //responds with a json object of our database quotes.
+        res.json(users)
+     });
+  })
+  //post new user to the database
+  .post(function(req, res) {
+      var user = new User();
+      //body parser lets us use the req.body
+      user.username = req.body.username
+      user.password = req.body.password
+      user.role = req.body.role
+      user.email = req.body.email
+      user.name = req.body.name
+      user.inscriptionDate = req.body.inscriptionDate
+
+      user.save(function(err) {
+        if (err)
+          res.send(err);
+          res.json({ message: 'User successfully added!' });
+      });
+  });

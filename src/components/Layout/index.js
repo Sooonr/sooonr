@@ -7,6 +7,8 @@ import Home from '../Home';
 import Quote from '../Quote';
 import ShowQuote from '../ShowQuote';
 import UpdateQuote from '../UpdateQuote';
+import Login from '../Login';
+import Signup from '../Signup';
 
 
 class Layout extends Component {
@@ -32,6 +34,8 @@ class Layout extends Component {
         </header>
         <main>
           <Route path="/" exact component={Home} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/signup" exact component={Signup} />
           <Route path="/new" exact component={Quote} />
           <Route path="/quote/:id" exact component={ShowQuote} />
           <Route path="/quote/update/:id" exact component={UpdateQuote} />
