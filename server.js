@@ -4,6 +4,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Quote = require('./model/quote');
+var Event = require('./model/event');
 var Follow = require('./model/follow');
 var User = require('./model/user');
 
@@ -109,6 +110,46 @@ router.route('/quotes')
      }
  });
 
+router.route('/events')
+ //retrieve all events from the database
+ .get(function(req, res) {
+     //looks at our Quote Schema
+     Event.find(function(err, events) {
+     if (err)
+       res.send(err);
+       //responds with a json object of our database quotes.
+       res.json(events)
+    });
+ })
+ //post new event to the database
+ .post(function(req, res) {
+    var event = new Event();
+    //body parser lets us use the req.body
+    event.description = req.body.description;
+    event.title = req.body.title;
+    event.creator = req.body.creator;
+    event.save(function(err) {
+        if (err) {
+            res.send(err);
+            err = false;
+        } else {
+            res.json({ message: 'Event successfully added!' });
+        }  
+    });
+ });
+
+router.route('/event/:id')
+ //retrieve an event from the database by id
+ .get(function(req, res) {
+     const id = req.originalUrl.split('/')[3];
+     //looks at our Quote Schema
+     Event.findById(id, function(err, event) {
+       if (err)
+         res.send(err);
+         //responds with a json object of our database quotes.
+         res.json(event)
+    });
+ });
  //Follows
 
  router.route('/follows')
