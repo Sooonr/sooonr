@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 
-class Signup extends Component {
+class Login extends Component {
+
+  static propTypes = {
+      loginFunc: PropTypes.func.isRequired,
+   };
 
   state = {
     inputValues: {},
-    message: "inscrivez vous",
-    data: "",
+    message: "Connectez vous",
+    redirect: false
    };
 
   updateContent = ({ target: {value, name} }) => {
@@ -19,35 +24,27 @@ class Signup extends Component {
     }));
   }
 
-   handleSubmit = e => {
+   handleSubmit = async e => {
      e.preventDefault();
 
      const { inputValues } = this.state;
      const { username, password } = inputValues;
 
      if (username && password) {
-       this.connectUser(username, password)
+       const login = await this.props.loginFunc(username, password);
+       if (login.error) {
+         this.setState({ message: login.message });
+       } else {
+         this.setState({ redirect: true })
+       }
      }
    }
 
-  connectUser = (username, password) => {
-    axios.post('http://localhost:3001/api/login', {
-      username,
-      password,
-    })
-    .then(res => {
-      if (res.data.error) {
-        this.setState({ message: res.data.message })
-      } else {
-        this.setState({
-          message: "Connexion done"
-        });
-      }
-    })
-  }
-
   render() {
-      const { message } = this.state;
+      const { message, redirect } = this.state;
+
+      if (redirect) return <Redirect to={'/'} />;
+
       return (
         <div className={css(styles.container)}>
           <form onSubmit={this.handleSubmit}>
@@ -55,7 +52,7 @@ class Signup extends Component {
             <input name="password" type="password" placeholder="password" onChange={this.updateContent} />
             <button type="submit">Connexion </button>
           </form>
-          {message}
+          <p>{message}</p>
         </div>
       );
   }
@@ -71,4 +68,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Signup;
+export default Login;

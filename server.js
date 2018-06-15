@@ -5,8 +5,6 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Quote = require('./model/quote');
 var User = require('./model/user');
-var passport = require('passport')
-var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
 var router = express.Router();
@@ -61,7 +59,6 @@ router.delete('/:id',function(req, res) {
      const id = reqId.split('=')[1];
      var ObjectId = require('mongodb').ObjectID;
 
-     console.log(id);
      Quote.deleteOne({ "_id" : ObjectId(id) }, function(err, quotes) {
        if (err)
          res.send(err);
@@ -120,7 +117,6 @@ router.route('/login')
     const password = req.body.password
 
     User.findOne({ username: username }, function(err, user) {
-      console.log("test : ", user);
       if (err) { res.send(err) }
       if (!user) {
         res.send({error: true, message: 'Les identifiants sont incorrects'})
@@ -128,13 +124,26 @@ router.route('/login')
           user.comparePassword(password, function(err, isMatch) {
             if (err) res.send(err);
             if (isMatch) {
-              res.send({error: false})
+              res.send({error: false, user })
             } else {
               res.send({error: true, message: 'Les identifiants sont incorrects'})
             }
           });
         }
     });
+  });
+
+  router.route('/user/:id')
+  //retrieve a user from the database by id
+  .get(function(req, res) {
+      const id = req.originalUrl.split('/')[3];
+      //looks at our User Schema
+      User.findById(id, function(err, user) {
+        if (err)
+          res.send(err);
+          //responds with a json object of our database quotes.
+          res.json(user)
+     });
   });
 
  router.route('/users')
