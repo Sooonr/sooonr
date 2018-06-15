@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var Quote = require('./model/quote');
 var Event = require('./model/event');
 var Follow = require('./model/follow');
+var Register = require('./model/register');
 var User = require('./model/user');
 
 var app = express();
@@ -110,6 +111,8 @@ router.route('/quotes')
      }
  });
 
+// Events
+
 router.route('/events')
  //retrieve all events from the database
  .get(function(req, res) {
@@ -134,7 +137,7 @@ router.route('/events')
             err = false;
         } else {
             res.json({ message: 'Event successfully added!' });
-        }  
+        }
     });
  });
 
@@ -150,6 +153,7 @@ router.route('/event/:id')
          res.json(event)
     });
  });
+
  //Follows
 
  router.route('/follows')
@@ -179,6 +183,37 @@ router.route('/event/:id')
   } else {
     res.json({ error: true, message: 'Missing parameters' });
   }
+});
+
+//Register
+
+router.route('/registers')
+//retrieve all followers from the database
+.get(function(req, res) {
+    //looks at our Follow Schema
+    Follow.find(function(err, registers) {
+    if (err)
+      res.send(err);
+      //responds with a json object of our database quotes.
+      res.json(registers)
+      console.log("yeeees : ", registers);
+   });
+})
+.post(function(req, res) {
+ var register = new Register();
+ //body parser lets us use the req.body
+ register.idUser = req.body.idUser;
+ register.idArtist = req.body.idArtist;
+ console.log(register);
+ if (register.idUser && register.idArtist) {
+    follow.save(function(err) {
+       if (err)
+         res.send(err);
+         res.json({ message: 'Register successfully added!' });
+    });
+ } else {
+   res.json({ error: true, message: 'Missing parameters' });
+ }
 });
 
 // Users
