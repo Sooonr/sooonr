@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var EventsSchema = new Schema({
-	creator: { type: String, required: true },
+	creator: {type: Schema.Types.ObjectId, ref: 'Users'},
     title: String,
     date: Date,
     description: String,
