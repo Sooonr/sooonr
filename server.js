@@ -4,11 +4,8 @@ var express = require('express');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var Quote = require('./model/quote');
-<<<<<<< HEAD
 var Follow = require('./model/follow');
-=======
 var User = require('./model/user');
->>>>>>> dev
 
 var app = express();
 var router = express.Router();
