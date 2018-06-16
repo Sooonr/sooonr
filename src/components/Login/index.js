@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
 import { Redirect } from 'react-router-dom';
 
+import Container from '../utils/Container';
+
 class Login extends Component {
 
   static propTypes = {
@@ -46,14 +48,14 @@ class Login extends Component {
       if (redirect) return <Redirect to={'/'} />;
 
       return (
-        <div className={css(styles.container)}>
+        <Container>
           <form onSubmit={this.handleSubmit}>
             <input name="username" type="text" placeholder="login" onChange={this.updateContent} />
             <input name="password" type="password" placeholder="password" onChange={this.updateContent} />
             <button type="submit">Connexion </button>
           </form>
           <p>{message}</p>
-        </div>
+        </Container>
       );
   }
 }

@@ -113,10 +113,23 @@ router.route('/quotes')
 
 // Events
 
+router.route('/event/:id')
+//retrieve a event from the database by id
+.get(function(req, res) {
+    const id = req.originalUrl.split('/')[3];
+    //looks at our event Schema
+    Event.findById(id, function(err, event) {
+      if (err)
+        res.send(err);
+        //responds with a json object of our database quotes.
+        res.json(event)
+   });
+});
+
 router.route('/events')
  //retrieve all events from the database
  .get(function(req, res) {
-     //looks at our Quote Schema
+     //looks at our event Schema
      Event.find(function(err, events) {
      if (err)
        res.send(err);

@@ -9,8 +9,11 @@ import ShowQuote from '../ShowQuote';
 import UpdateQuote from '../UpdateQuote';
 import Login from '../Login';
 import Signup from '../Signup';
+import Event from '../Event';
 
-import { getActualUser, loginUser } from '../../db/users';
+import Container from '../utils/Container';
+
+import { getUserById, loginUser } from '../../db/users';
 
 class Layout extends Component {
 
@@ -25,7 +28,7 @@ class Layout extends Component {
 
   actualUser = async userId => {
     //Load actual user
-    const user = await getActualUser(userId);
+    const user = await getUserById(userId);
     this.setState({ user });
   }
 
@@ -59,7 +62,7 @@ class Layout extends Component {
     const { user } = this.state;
 
     let isConnected = <Link className={css(styles.navLink)} to="/login">Connexion</Link>
-    if (user) isConnected = <p>Bienvenue {user.username} <button onClick={this.logout} className={css(styles.navLink)} to="/login">Déconnexion</button></p>
+    if (user) isConnected = <span className={css(styles.navLink)} >Bienvenue {user.username} <button onClick={this.logout} className={css(styles.navLink)} to="/login">Déconnexion</button></span>
 
 
     return (
@@ -77,28 +80,34 @@ class Layout extends Component {
           <nav className={css(styles.nav)}>
             <Link className={css(styles.navLink)} to="/">Home</Link>
             <Link className={css(styles.navLink)} to="/new">Add a quote</Link>
+            {isConnected}
           </nav>
-          {isConnected}
         </header>
         <main>
           <Route path="/" exact component={Home} />
           <Route path="/login" exact render={()=><Login loginFunc={this.login} />} />
           <Route path="/signup" exact component={Signup} />
+          <Route path="/event/:id" exact component={Event} />
           <Route path="/new" exact component={Quote} />
           <Route path="/quote/:id" exact component={ShowQuote} />
           <Route path="/quote/update/:id" exact component={UpdateQuote} />
         </main>
+        <footer className={css(styles.appFooter)}>
+          <Container>
+            This is the footer
+          </Container>
+        </footer>
       </div>
     );
   }
 }
 
 const styles = StyleSheet.create({
-    app: {
-      textAlign: 'center',
-    },
     smallHeader: {
-      display: 'flex',
+
+      display: 'none',
+
+      // display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       color: '#000',
@@ -132,11 +141,14 @@ const styles = StyleSheet.create({
     },
     appTitle: {
       fontSize: '1.5em',
+      color: '#fff',
     },
     nav: {
       display: 'flex',
       justifyContent: 'space-around',
-      width: 500,
+      flexWrap: 'wrap',
+      width: '100%',
+      maxWidth: 840,
     },
     navLink: {
       color: '#fff',
@@ -145,6 +157,13 @@ const styles = StyleSheet.create({
         opacity: '0.8'
       }
     },
+    appFooter: {
+      height: 100,
+      padding: '20px 0',
+      backgroundColor: '#212121',
+      marginTop: 30,
+      color: '#fff',
+    }
 });
 
 export default Layout;
