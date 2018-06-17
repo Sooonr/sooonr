@@ -7,6 +7,7 @@ import Home from '../Home';
 import Quote from '../Quote';
 import ShowQuote from '../ShowQuote';
 import UpdateQuote from '../UpdateQuote';
+import icons from 'glyphicons'
 import Login from '../Login';
 import Signup from '../Signup';
 
@@ -67,16 +68,18 @@ class Layout extends Component {
         <header className={css(styles.appHeader)}>
           <div className={css(styles.smallHeader)}>
             <a className={css(styles.smallHeaderLink)} href="https://github.com/ValentinKajdan/ReactCRUD" target="_blank">
-              <img className={css(styles.smallHeaderImg)} src="/img/github.png" width="20"/> ReactCRUD - Join us to build the most powerfull CRUD based on ReactJS !
+              <img className={css(styles.smallHeaderImg)} src="/img/githubWhite.png" width="20"/> Sooonr - Join us to build the best!
             </a>
             <span>
               Valentin Kajdan - Rudy Lantoarijaona - Antoine Lucas
             </span>
           </div>
-          <h1 className={css(styles.appTitle)}>Welcome to ReactCRUD</h1>
+          <img className={css(styles.headerImg)} src="/img/sooonr.png" width="200"/>
           <nav className={css(styles.nav)}>
             <Link className={css(styles.navLink)} to="/">Home</Link>
             <Link className={css(styles.navLink)} to="/new">Add a quote</Link>
+            <Link className={css(styles.navLink)} to="/#">Agenda</Link>
+            <Link className={css(styles.navLink)} to="/signup">Sign Up</Link>
           </nav>
           {isConnected}
         </header>
@@ -89,6 +92,8 @@ class Layout extends Component {
           <Route path="/quote/update/:id" exact component={UpdateQuote} />
         </main>
       </div>
+
+
     );
   }
 }
@@ -101,20 +106,21 @@ const styles = StyleSheet.create({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      color: '#000',
+      color: '#ffffff',
       fontSize: 12,
       marginBottom: 10,
       padding: '0 20px',
       height: 35,
       width: '100%',
-      backgroundColor: '#fff',
+      backgroundColor: '#000000',
     },
     smallHeaderLink: {
       display: 'flex',
       alignItems: 'center',
-      color: '#000',
+      color: '#ffffff',
       textDecoration: 'none',
       opacity: '0.7',
+      
       ':hover': {
         opacity: '1',
       }
@@ -122,13 +128,18 @@ const styles = StyleSheet.create({
     smallHeaderImg: {
       marginRight: 10,
     },
+    headerImg: {
+      margin: '2%',
+    },
     appHeader: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      backgroundColor: '#222',
+      backgroundColor: 'white',
       paddingBottom: 20,
-      color: 'white',
+      color: 'black',
+      opacity: '1',
+      borderBottom: '0.5px solid #ffa70d',
     },
     appTitle: {
       fontSize: '1.5em',
@@ -136,14 +147,18 @@ const styles = StyleSheet.create({
     nav: {
       display: 'flex',
       justifyContent: 'space-around',
-      width: 500,
+      
     },
     navLink: {
-      color: '#fff',
+      color: '#aaa',
       textDecoration: 'none',
+      textTransform: 'uppercase',
+      marginRight: 25,
       ':hover': {
-        opacity: '0.8'
+        opacity: '0.8',
+               
       }
+      
     },
 });
 
