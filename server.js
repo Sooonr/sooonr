@@ -114,33 +114,43 @@ router.route('/quotes')
 // Events
 
 router.route('/event/:id')
-//retrieve a event from the database by id
 .get(function(req, res) {
     const id = req.originalUrl.split('/')[3];
-    //looks at our event Schema
     Event.findById(id, function(err, event) {
       if (err)
         res.send(err);
-        //responds with a json object of our database quotes.
         res.json(event)
    });
 });
 
+router.route('/event/edit/:id')
+.post(function(req, res) {
+    const id = req.originalUrl.split('/')[4];
+    Event.findById(id, function(err, event) {
+      if (err) res.send(err);
+      event.title = req.body.title;
+      event.description = req.body.description;
+      event.adress = req.body.adress;
+      event.date = req.body.date;
+      event.imgUrl = req.body.imgUrl;
+      event.updatedAt = req.body.updatedAt;
+      event.save(function(err) {
+        if (err) res.send(err);
+        res.json({ message: 'Event successfully updated!' });
+       });
+    });
+})
+
 router.route('/events')
- //retrieve all events from the database
  .get(function(req, res) {
-     //looks at our event Schema
      Event.find(function(err, events) {
      if (err)
        res.send(err);
-       //responds with a json object of our database quotes.
        res.json(events)
     });
  })
- //post new event to the database
  .post(function(req, res) {
     var event = new Event();
-    //body parser lets us use the req.body
     event.description = req.body.description;
     event.title = req.body.title;
     event.creator = req.body.creator;
@@ -151,19 +161,6 @@ router.route('/events')
         } else {
             res.json({ message: 'Event successfully added!' });
         }
-    });
- });
-
-router.route('/event/:id')
- //retrieve an event from the database by id
- .get(function(req, res) {
-     const id = req.originalUrl.split('/')[3];
-     //looks at our Quote Schema
-     Event.findById(id, function(err, event) {
-       if (err)
-         res.send(err);
-         //responds with a json object of our database quotes.
-         res.json(event)
     });
  });
 

@@ -1,61 +1,97 @@
 import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
+import { Redirect } from 'react-router-dom';
 import 'moment/locale/fr';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
 
-import { getEvent } from '../../db/events';
+import { EditorState, convertFromRaw, convertToRaw, ContentState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+
+import { getEvent, editEvent } from '../../db/events';
 
 import Loader from '../utils/Loader';
 import Title from '../utils/Title';
 import Subtitle from '../utils/Subtitle';
 import Container from '../utils/Container';
 
-class Event extends Component {
+class EventEdit extends Component {
 
   state = {
     loading: true,
-    error: false,
-    errorCode: null,
-    errorMessage: null,
-    event: {},
+    redirect: false,
+    event: {}
    };
 
   componentDidMount = () => {
-    const idEvent = this.props.location.pathname.split('/')[2];
+    const idEvent = this.props.location.pathname.split('/')[3];
     this.getCurrentEvent(idEvent);
   }
 
   getCurrentEvent = async idEvent => {
     const event = await getEvent(idEvent);
-    if (event.error) {
-      this.setState({
-        error: true,
-        errorCode: event.errorCode,
-        errorMessage: event.errorMessage,
-        loading: false,
-      })
-    } else {
-      this.setState({ event, loading: false });
-    }
+    const contentState = ContentState.createFromBlockArray(htmlToDraft(event.description).contentBlocks);
+    const editorState = EditorState.createWithContent(contentState);
+    this.setState({
+      event,
+      loading: false,
+      editorState,
+    });
+  }
+
+  onEditorStateChange = editorState => {
+    this.setState({
+      editorState,
+    });
+  };
+
+  onContentStateChange = () => {
+    const { editorState, event } = this.state;
+    this.setState({
+      event: {
+        ...event,
+        description: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+      }
+    })
+  }
+
+ updateContent = ({ target: {value, name} }) => {
+   this.setState(({ event }) => ({
+      event: {
+         ...event,
+         [name]: value,
+      },
+   }));
+ }
+
+  handleSubmit = async () => {
+    const { event } = this.state;
+    event.updatedAt = Date.now;
+    const updatedEvent = await editEvent(event);
+    if (!updatedEvent.error) this.setState({ redirect: true })
   }
 
   render() {
 
-    const { event, loading, error, errorCode, errorMessage } = this.state;
+    if (!localStorage.getItem('userId')) return <Container>Access Denied</Container>
 
-    if (error) return <Container>Erreur {errorCode} : {errorMessage}</Container>
+
+    const { event, loading, editorState, contentState, redirect } = this.state;
+
+    if (redirect) return <Redirect to={`/event/${event._id}`} />;
 
     moment.locale('fr');
     const month = moment(event.date).format("MMM")
     const day = moment(event.date).format("Do")
     const year = moment(event.date).format("YYY")
-    let creatorName = "";
-    let userEvent = false;
 
+    let creatorName = '';
+
+    if (!loading && localStorage.getItem('userId') !== event.creator._id) return <Container>Access Denied</Container>
     if (!loading) {
-      userEvent = localStorage.getItem('userId') === event.creator._id && true;
-      creatorName = event.creator.name ? `${event.creator.name.first} ${event.creator.name.last}` : userEvent ? 'moi' : event.creator.username;
+      creatorName = event.creator.name ? `${event.creator.name.first} ${event.creator.name.last}` : event.creator.username;
     }
 
     return (
@@ -99,18 +135,23 @@ class Event extends Component {
                     {event.updatedAt && (
                       <span>Modifié le {moment(event.updatedAt).format("Do MMMM YYYY")}.</span>
                     )}
-                    {userEvent && (
-                      <Link to={`/event/edit/${event._id}`}>Modifier mon évènement</Link>
-                    )}
                   </div>
                   <div className={css(styles.eventDescription)}>
                     <Subtitle content="A propos" />
-                    <div dangerouslySetInnerHTML={{__html: event.description}} />
+
+                    <Editor
+                      initialContentState={contentState}
+                      editorState={editorState}
+                      editorClassName={css(styles.editor)}
+                      onContentStateChange={this.onContentStateChange}
+                      onEditorStateChange={this.onEditorStateChange} />
+
                   </div>
                   <div className={css(styles.eventDescription)}>
                     <Subtitle content="Localisation" />
-                    {event.adress}
+                    <input name="adress" type="text" value={event.adress} onChange={this.updateContent} />
                   </div>
+                  <button onClick={this.handleSubmit}>Enregistrer !!</button>
                 </div>
               }
               </Container>
@@ -176,7 +217,17 @@ const styles = StyleSheet.create({
     },
     eventDescription: {
       textAlign: 'justify',
+    },
+    editor: {
+      padding: '0 15px',
+      borderRadius: 2,
+      border: '1px solid #F1F1F1',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      background: 'white',
+      flexWrap: 'wrap',
+      marginBottom: 5,
     }
 });
 
-export default Event;
+export default EventEdit;

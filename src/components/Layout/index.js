@@ -10,6 +10,7 @@ import UpdateQuote from '../UpdateQuote';
 import Login from '../Login';
 import Signup from '../Signup';
 import Event from '../Event';
+import EventEdit from '../EventEdit';
 
 import Container from '../utils/Container';
 
@@ -88,6 +89,7 @@ class Layout extends Component {
           <Route path="/login" exact render={()=><Login loginFunc={this.login} />} />
           <Route path="/signup" exact component={Signup} />
           <Route path="/event/:id" exact component={Event} />
+          <Route path="/event/edit/:id" exact component={EventEdit} />
           <Route path="/new" exact component={Quote} />
           <Route path="/quote/:id" exact component={ShowQuote} />
           <Route path="/quote/update/:id" exact component={UpdateQuote} />
