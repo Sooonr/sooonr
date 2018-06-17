@@ -8,18 +8,67 @@ import Quote from '../Quote';
 import ShowQuote from '../ShowQuote';
 import UpdateQuote from '../UpdateQuote';
 import icons from 'glyphicons'
+import Login from '../Login';
+import Signup from '../Signup';
 
+import { getActualUser, loginUser } from '../../db/users';
 
 class Layout extends Component {
 
+  state = {
+    user: null,
+  }
+
+   componentDidMount = () => {
+     const userId = localStorage.getItem('userId') ? localStorage.getItem('userId') : null;
+     if (userId) this.actualUser(userId);
+   }
+
+  actualUser = async userId => {
+    //Load actual user
+    const user = await getActualUser(userId);
+    this.setState({ user });
+  }
+
+  logout = () => {
+    //Logout user
+    localStorage.removeItem('userId');
+    this.setState({ user: null})
+  }
+
+  login = async (username, password) => {
+    //Loin user
+    const isLogin = await loginUser(username, password);
+
+    if (isLogin.error) {
+      return {
+        error: true,
+        message: isLogin.message,
+      }
+    } else {
+      localStorage.setItem('userId', isLogin.user._id);
+      this.setState({
+        user: isLogin.user,
+      });
+      return {
+        error: false,
+      }
+    }
+  }
+
   render() {
+    const { user } = this.state;
+
+    let isConnected = <Link className={css(styles.navLink)} to="/login">Connexion</Link>
+    if (user) isConnected = <p>Bienvenue {user.username} <button onClick={this.logout} className={css(styles.navLink)} to="/login">Déconnexion</button></p>
+
 
     return (
       <div className={css(styles.app)}>
         <header className={css(styles.appHeader)}>
           <div className={css(styles.smallHeader)}>
             <a className={css(styles.smallHeaderLink)} href="https://github.com/ValentinKajdan/ReactCRUD" target="_blank">
-              <img className={css(styles.smallHeaderImg)} src="/img/githubWhite.png" width="20"/> ReactCRUD - Join us to build the most powerfull CRUD based on ReactJS !
+              <img className={css(styles.smallHeaderImg)} src="/img/githubWhite.png" width="20"/> Sooonr - Join us to build the best!
             </a>
             <span>
               Valentin Kajdan - Rudy Lantoarijaona - Antoine Lucas
@@ -30,11 +79,14 @@ class Layout extends Component {
             <Link className={css(styles.navLink)} to="/">Home</Link>
             <Link className={css(styles.navLink)} to="/new">Add a quote</Link>
             <Link className={css(styles.navLink)} to="/#">Agenda</Link>
-            <Link className={css(styles.navLink)} to="/#">Login</Link>
+            <Link className={css(styles.navLink)} to="/signup">Sign Up</Link>
           </nav>
+          {isConnected}
         </header>
         <main>
           <Route path="/" exact component={Home} />
+          <Route path="/login" exact render={()=><Login loginFunc={this.login} />} />
+          <Route path="/signup" exact component={Signup} />
           <Route path="/new" exact component={Quote} />
           <Route path="/quote/:id" exact component={ShowQuote} />
           <Route path="/quote/update/:id" exact component={UpdateQuote} />

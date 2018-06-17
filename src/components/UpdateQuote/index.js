@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import axios from 'axios';
-import { Redirect } from 'react-router-dom';
 
 class UpdateQuote extends Component {
 

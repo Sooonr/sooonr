@@ -3,6 +3,8 @@ import { StyleSheet, css } from 'aphrodite/no-important';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import icons from 'glyphicons';
+import ListEvent from '../ListEvent';
+import SearchBar from '../SearchBar';
 
 class Home extends Component {
 
@@ -29,29 +31,32 @@ class Home extends Component {
     if (data.length > 0) {
       return (
       <div>
-      <div className={css(styles.searchContainer)}>
+       {/*<SearchBar />*/}
+        <div className={css(styles.searchContainer)}>
         <form className={css(styles.formSearchContainer)} >
           <input className={css(styles.inputSearchBar)} type="text"  id="search-bar" name="name" placeholder="Rechercher un évenement" ></input>
           <a className={css(styles.Link)} href="#">
               <img className={css(styles.searchIcon)} src="http://www.endlessicons.com/wp-content/uploads/2012/12/search-icon.png" />
           </a>
         </form>
-      <select className={css(styles.linkBtn)} >
-        <option value="valeur1">Tri par date</option> 
-        <option value="valeur2" selected> Plus récents</option>
-        <option value="valeur3">Plus anciens</option>
-      </select>
-      <select className={css(styles.linkBtn)} >
-        <option value="valeur1">Tri par type</option> 
-        <option value="valeur2" selected>Plus anciens</option>
-        <option value="valeur3">Passé</option>
-      </select>
-      </div>
+        <select className={css(styles.linkBtn)} >
+          <option value="valeur1">Tri par date</option> 
+          <option value="valeur2" selected> Plus récents</option>
+          <option value="valeur3">Plus anciens</option>
+        </select>
+        <select className={css(styles.linkBtn)} >
+          <option value="valeur1">Tri par type</option> 
+          <option value="valeur2" selected>Plus anciens</option>
+          <option value="valeur3">Passé</option>
+        </select>
+      </div> 
+      
       <div className={css(styles.eventMain)}>
       <div className={css(styles.eventCardList)}>
      
        {
-              this.state.data.map((quote, key) =>             
+              this.state.data.map((quote, key) =>  
+              /*<ListEvent key={key} _id={quote._id}  name={quote.name} quote={quote.quote}/>*/
               <Link key={key}className={css(styles.link)} to={`/quote/${quote._id}`}>
               <div className={css(styles.eventCard)}>
                   <div className={css(styles.colorOverlay)}>
@@ -68,7 +73,7 @@ class Home extends Component {
                     </div>                   
                     <div className={css(styles.eventContent)}>         
                       <div className={css(styles.eventHeader)}>
-                        <h1 className={css(styles.eventTitle)}>{icons.calendar} {quote.name}</h1>
+                        <h3 className={css(styles.eventTitle)}>{icons.calendar} {quote.name}</h3>
                         <h4 className={css(styles.eventLieu)}>{icons.mapMarker}242 Faubourg Saint Antoine, Paris 75012</h4>
                       </div>
                         <p className={css(styles.eventDetails)}>{quote.quote}</p>
@@ -188,6 +193,10 @@ const styles = StyleSheet.create({
     },
     eventMain: {
       display: 'flex',
+      width: '100%',
+      margin: '0 auto',
+      paddingRight: '15%',
+      paddingLeft: '5%',
     },
     eventCard: {
       backgroundImage: '#0c0c0c',
