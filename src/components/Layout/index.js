@@ -112,9 +112,9 @@ class Layout extends Component {
 const styles = StyleSheet.create({
     smallHeader: {
 
-      display: 'none',
+      // display: 'none',
 
-      // display: 'flex',
+      display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       color: '#ffffff',

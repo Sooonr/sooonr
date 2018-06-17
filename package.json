@@ -14,11 +14,8 @@
     "draftjs-to-html": "^0.8.4",
     "express": "^4.16.2",
     "foreman": "^2.0.0",
-<<<<<<< HEAD
     "html-to-draftjs": "^1.4.0",
-=======
     "glyphicons": "^0.2.0",
->>>>>>> dev
     "marked": "^0.3.12",
     "moment": "^2.22.2",
     "mongoose": "^5.0.4",
