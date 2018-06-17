@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import PropTypes from 'prop-types';
+
 
 class ListEvent extends Component {
 
@@ -9,15 +11,15 @@ class ListEvent extends Component {
     
       render() {
                      
-        <div className={css(styles.eventCardList)}>
+        return(<div className={css(styles.eventCardList)}>
         {
                this.state.data.map((props, key) =>             
-               <Link key={key}className={css(styles.link)} to={`/quote/${props._id}`}>
+               <Link key={key} className={css(styles.link)} to={`/quote/${props._id}`}>
                <div className={css(styles.eventCard)}>
                    <div className={css(styles.colorOverlay)}>                                   
                      <div className={css(styles.eventContent)}>         
                        <div className={css(styles.eventHeader)}>
-                         <h1 className={css(styles.eventTitle)}>{props.name}</h1>
+                         <h3 className={css(styles.eventTitle)}>{props.name}</h3>
                          <h4 className={css(styles.eventLieu)}></h4>
                        </div>
                          <p className={css(styles.eventDetails)}>{props.quote}</p>
@@ -35,7 +37,8 @@ class ListEvent extends Component {
                )
               
              }
-        </div>
+        </div>)
+        
 
         }
     

@@ -68,7 +68,7 @@ class Layout extends Component {
         <header className={css(styles.appHeader)}>
           <div className={css(styles.smallHeader)}>
             <a className={css(styles.smallHeaderLink)} href="https://github.com/ValentinKajdan/ReactCRUD" target="_blank">
-              <img className={css(styles.smallHeaderImg)} src="/img/githubWhite.png" width="20"/> ReactCRUD - Join us to build the most powerfull CRUD based on ReactJS !
+              <img className={css(styles.smallHeaderImg)} src="/img/githubWhite.png" width="20"/> Sooonr - Join us to build the best!
             </a>
             <span>
               Valentin Kajdan - Rudy Lantoarijaona - Antoine Lucas
@@ -79,7 +79,7 @@ class Layout extends Component {
             <Link className={css(styles.navLink)} to="/">Home</Link>
             <Link className={css(styles.navLink)} to="/new">Add a quote</Link>
             <Link className={css(styles.navLink)} to="/#">Agenda</Link>
-            <Link className={css(styles.navLink)} to="/#">Login</Link>
+            <Link className={css(styles.navLink)} to="/signup">Sign Up</Link>
           </nav>
           {isConnected}
         </header>
