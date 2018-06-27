@@ -4,14 +4,11 @@ import { StyleSheet, css } from 'aphrodite';
 import { Route, Link } from 'react-router-dom';
 
 import Home from '../Home';
-import Quote from '../Quote';
-import ShowQuote from '../ShowQuote';
-import UpdateQuote from '../UpdateQuote';
 import icons from 'glyphicons'
 import Login from '../Login';
 import Signup from '../Signup';
 import Event from '../Event';
-import EventEdit from '../EventEdit';
+import NewEvent from '../Event/eventNew';
 
 import Container from '../utils/Container';
 
@@ -81,7 +78,7 @@ class Layout extends Component {
           <img className={css(styles.headerImg)} src="/img/sooonr.png" width="200"/>
           <nav className={css(styles.nav)}>
             <Link className={css(styles.navLink)} to="/">Home</Link>
-            <Link className={css(styles.navLink)} to="/new">Add a quote</Link>
+            <Link className={css(styles.navLink)} to="/event/new">Add an event</Link>
             {isConnected}
             <Link className={css(styles.navLink)} to="/#">Agenda</Link>
             <Link className={css(styles.navLink)} to="/signup">Sign Up</Link>
@@ -92,10 +89,7 @@ class Layout extends Component {
           <Route path="/login" exact render={()=><Login loginFunc={this.login} />} />
           <Route path="/signup" exact component={Signup} />
           <Route path="/event/:id" exact component={Event} />
-          <Route path="/event/edit/:id" exact component={EventEdit} />
-          <Route path="/new" exact component={Quote} />
-          <Route path="/quote/:id" exact component={ShowQuote} />
-          <Route path="/quote/update/:id" exact component={UpdateQuote} />
+          <Route path="/event/new" exact render={()=><NewEvent user={user} />} />
         </main>
         <footer className={css(styles.appFooter)}>
           <Container>

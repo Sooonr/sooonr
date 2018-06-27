@@ -5,15 +5,16 @@ import { StyleSheet, css } from 'aphrodite';
 class Title extends Component {
 
   static propTypes = {
-    content: PropTypes.string.isRequired
+    content: PropTypes.string.isRequired,
+    style: PropTypes.object
   }
 
   render() {
 
-    const { content } = this.props;
+    const { content, style: customStyle } = this.props;
 
     return (
-      <h1 className={css(styles.title)}>{content}</h1>
+      <h1 className={css([styles.title, customStyle])}>{content}</h1>
     );
   }
 }

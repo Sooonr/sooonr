@@ -1,35 +1,47 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
 
-class Utils extends Component {
+class Button extends Component {
 
+  static propTypes = {
+    content: PropTypes.string.isRequired,
+    style: PropTypes.object,
+    onClick: PropTypes.func
+  }
 
-    
-      render() {
+  render() {
 
-        <Link className={css(styles.linkBtn)} to={`#`}>Button</Link>
-      }
-    
-    }
+    const { content, style: customStyle, onClick } = this.props;
+    console.log(content);
+
+    return (
+      <button
+      onClick={e => {
+         if (onClick) onClick(e)
+      }}
+      className={css([styles.button, customStyle])}>{content}</button>
+    );
+  }
+}
 
     const styles = StyleSheet.create({
-        linkBtn: {
-            padding: '.8em 2em',
-            backgroundColor: 'rgba(255,255,255,.2)',
-            color: 'black',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            backgroundColor: 'transparent',
-            border: '1px solid black',
-            margin: '1%',
-            ':hover':{
-                borderColor: '#ffa70d',
-                color: '#ffa70d',
-                boxShadow: '0px 1px 8px 0px rgba(245,199,0,.2)',
-                    }
-            }
+        button: {
+          color: '#fff',
+          backgroundColor: '#f2f2f2',
+          fontSize: 14,
+          textTransform: 'uppercase',
+          padding: '10px 16px',
+          border: 'none',
+          cursor: 'pointer',
+          backgroundColor: '#604c8d',
+          boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.225)',
+          transition: 'all .3s ease-out',
+          ':hover': {
+            backgroundColor: '#856bbf',
+            boxShadow: '0 4px 10px 0px rgba(0, 0, 0, 0.225)'
+          }
+        }
     });
 
-    export default button;
+    export default Button;

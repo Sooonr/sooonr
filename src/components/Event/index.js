@@ -1,15 +1,26 @@
 import React, { Component } from 'react';
 import { StyleSheet, css } from 'aphrodite';
+import { Link } from 'react-router-dom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import 'moment/locale/fr';
 import moment from 'moment';
-import { Link } from 'react-router-dom';
+import icons from 'glyphicons';
 
-import { getEvent } from '../../db/events';
+import { EditorState, convertFromRaw, convertToRaw, ContentState } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
+
+import { getEvent, editEvent } from '../../db/events';
 
 import Loader from '../utils/Loader';
 import Title from '../utils/Title';
 import Subtitle from '../utils/Subtitle';
+import Button from '../utils/Button';
 import Container from '../utils/Container';
+import Divider from '../utils/Divider';
 
 class Event extends Component {
 
@@ -19,6 +30,7 @@ class Event extends Component {
     errorCode: null,
     errorMessage: null,
     event: {},
+    editMode: false,
    };
 
   componentDidMount = () => {
@@ -28,6 +40,8 @@ class Event extends Component {
 
   getCurrentEvent = async idEvent => {
     const event = await getEvent(idEvent);
+    const contentState = ContentState.createFromBlockArray(htmlToDraft(event.description).contentBlocks);
+    const editorState = EditorState.createWithContent(contentState);
     if (event.error) {
       this.setState({
         error: true,
@@ -36,13 +50,56 @@ class Event extends Component {
         loading: false,
       })
     } else {
-      this.setState({ event, loading: false });
+      this.setState({ event, loading: false, editorState });
     }
+  }
+
+  // Edit functions
+
+  onEditorStateChange = editorState => {
+    this.setState({
+      editorState,
+    });
+  };
+
+  onContentStateChange = () => {
+    const { editorState, event } = this.state;
+    this.setState({
+      event: {
+        ...event,
+        description: draftToHtml(convertToRaw(editorState.getCurrentContent())),
+      }
+    })
+  }
+
+ updateContent = ({ target: {value, name} }) => {
+   this.setState(({ event }) => ({
+      event: {
+         ...event,
+         [name]: value,
+      },
+   }));
+ }
+
+ handleChangeDate = date => {
+   this.setState(({ event }) => ({
+      event: {
+         ...event,
+         date,
+      },
+   }));
+  }
+
+  handleSubmit = async () => {
+    const { event } = this.state;
+    event.updatedAt = Date.now;
+    const updatedEvent = await editEvent(event);
+    if (!updatedEvent.error) this.setState({ editMode: false })
   }
 
   render() {
 
-    const { event, loading, error, errorCode, errorMessage } = this.state;
+    const { event, loading, error, errorCode, errorMessage, editMode, editorState, contentState } = this.state;
 
     if (error) return <Container>Erreur {errorCode} : {errorMessage}</Container>
 
@@ -55,7 +112,7 @@ class Event extends Component {
 
     if (!loading) {
       userEvent = localStorage.getItem('userId') === event.creator._id && true;
-      creatorName = event.creator.name ? `${event.creator.name.first} ${event.creator.name.last}` : userEvent ? 'moi' : event.creator.username;
+      creatorName = userEvent ? 'moi' : event.creator.name ? `${event.creator.name.first} ${event.creator.name.last}` : event.creator.username;
     }
 
     return (
@@ -70,13 +127,6 @@ class Event extends Component {
             <div
             className={css(styles.headerImg)}
             style={{ background: `url(${event.imgUrl}) center top` }}>
-              <div className={css(styles.registerBar)}>
-                <div className={css(styles.innerBar)}>
-                  {event.participants.length == 0 ? (
-                    <span className={css(styles.participantsNumber)}>Aucun participants pour le moment</span>
-                  ) : (<span className={css(styles.participantsNumber)}>{event.participants.length} participant(s)</span>)}
-                </div>
-              </div>
             </div>
           )}
               {loading && (
@@ -87,25 +137,71 @@ class Event extends Component {
               <Container>
               {!loading &&
                 <div>
+                {editMode &&
+                  <div className={css(styles.editContent)}>
+                    <span className={css(styles.exitEdit)} onClick={() => this.setState({editMode: false})} title="Annuler" >{icons.cross}</span>
+                    <h2 className={css(styles.editTitle)}>
+                      {icons.edit} Modifier votre évènement
+                    </h2>
+                    <div className={css(styles.editElement)}>
+                      <span>Date : </span>
+                      <DatePicker
+                      selected={moment(event.date)}
+                      onChange={this.handleChangeDate}
+                      className={css(styles.editInput)}
+                      />
+                    </div>
+                    <div className={css(styles.editElement)}>
+                      <span>Titre : </span>
+                      <input type="text" name="title" value={event.title} onChange={this.updateContent} className={css(styles.editInput)} />
+                    </div>
+                    <div className={css(styles.editElement)}>
+                      <span>Adresse : </span>
+                      <input type="text" name="adress" value={event.adress} onChange={this.updateContent} className={css(styles.editInput)} />
+                    </div>
+                  </div>
+                  }
                   <div className={css(styles.eventInfosBar)} >
                     <div className={css(styles.date)}>
                       <span>{month}</span>
                       <span className={css(styles.dateDay)}>{day}</span>
                     </div>
-                    <Title content={event.title} />
+                    <Title style={styles.eventTitle} content={event.title} />
+                    {!userEvent && (
+                      <Button content="Je m'inscris" />
+                    )}
+                    {userEvent && !editMode && (
+                      <Button content={`${icons.edit} Modifier`} onClick={() => this.setState({editMode: true})} />
+                    )}
+                    {userEvent && editMode && (
+                      <Button content={`${icons.check} Valider`} onClick={this.handleSubmit} />
+                    )}
                   </div>
                   <div className={css(styles.eventCreator)} >
                     <span>Evènement créé par <strong>{creatorName}</strong> le {moment(event.createdAt).format("Do MMMM YYYY")}. </span>
                     {event.updatedAt && (
                       <span>Modifié le {moment(event.updatedAt).format("Do MMMM YYYY")}.</span>
                     )}
-                    {userEvent && (
-                      <Link to={`/event/edit/${event._id}`}>Modifier mon évènement</Link>
-                    )}
                   </div>
+                  <Divider />
+                  <div className={css(styles.participantsNumber)}>
+                    <Subtitle content="Participants" />
+                    {event.participants.length == 0 ? "Aucun participants pour le moment" : `${event.participants.length} participant(s)`}
+                  </div>
+                  <Divider />
                   <div className={css(styles.eventDescription)}>
                     <Subtitle content="A propos" />
-                    <div dangerouslySetInnerHTML={{__html: event.description}} />
+                    {editMode &&
+                      <Editor
+                        initialContentState={contentState}
+                        editorState={editorState}
+                        editorClassName={css(styles.editor)}
+                        onContentStateChange={this.onContentStateChange}
+                        onEditorStateChange={this.onEditorStateChange} />
+                    }
+                    {!editMode &&
+                      <div dangerouslySetInnerHTML={{__html: event.description}} />
+                    }
                   </div>
                   <div className={css(styles.eventDescription)}>
                     <Subtitle content="Localisation" />
@@ -133,31 +229,31 @@ const styles = StyleSheet.create({
       display: 'flex',
       justifyContent: 'center'
     },
-    registerBar: {
+    editBar: {
       width: '100%',
-      padding: '10px 50px',
       display: 'flex',
-      alignItems: 'center',
+      backgroundColor: 'rgba(255, 167, 13, .3)',
     },
-    innerBar: {
+    innerEditBar: {
       width: '100%',
       maxWidth: 840,
       margin: 'auto',
-      display: 'flex',
-      justifyContent: 'flex-end',
+      padding: '10px 0',
+    },
+    editLink: {
+      color: '#fff !important',
+      textDecoration: 'none',
+      textTransform: 'uppercase',
+    },
+    inscriptionButton: {
     },
     participantsNumber: {
-      color: '#fff',
-      position: 'relative',
-      top: 27,
-      borderRadius: 5,
-      padding: 10,
-      backgroundColor: '#604c8d',
     },
     eventInfosBar: {
       display: 'flex',
       alignItems: 'center',
       textAlign: 'left',
+      justifyContent: 'space-between',
     },
     date: {
       display: 'flex',
@@ -169,13 +265,62 @@ const styles = StyleSheet.create({
     dateDay: {
       fontSize: 22,
     },
+    eventTitle: {
+      flex: '1',
+    },
     eventCreator: {
       textAlign: 'left',
       opacity: '0.5',
-      marginBottom: 30,
     },
     eventDescription: {
       textAlign: 'justify',
+    },
+    editor: {
+      padding: '0 15px',
+      borderRadius: 2,
+      border: '1px solid #F1F1F1',
+      display: 'flex',
+      justifyContent: 'flex-start',
+      background: 'white',
+      flexWrap: 'wrap',
+      marginBottom: 5,
+    },
+    editContent: {
+      margin: '10px 0',
+      padding: 10,
+      borderRadius: 4,
+      backgroundColor: '#FFE082',
+      fontSize: 14,
+      position: 'relative'
+    },
+    editTitle: {
+      margin: 5,
+      marginBottom: 10
+    },
+    editElement: {
+      display: 'flex',
+      alignItems: 'center',
+      margin: '5px 0'
+    },
+    editInput: {
+      padding: 0,
+      marginLeft: 5,
+      border: 'none',
+      cursor: 'pointer',
+      backgroundColor: 'transparent',
+      flex: '1'
+    },
+    exitEdit: {
+      position: 'absolute',
+      right: 0,
+      padding: 15,
+      paddingTop: 0,
+      fontSize: 24,
+      opacity: '0.5',
+      cursor: 'pointer',
+      ':hover': {
+        opacity: '1'
+      }
     }
 });
 
