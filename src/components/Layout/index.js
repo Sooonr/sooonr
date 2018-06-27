@@ -4,14 +4,16 @@ import { StyleSheet, css } from 'aphrodite';
 import { Route, Link } from 'react-router-dom';
 
 import Home from '../Home';
-import Quote from '../Quote';
-import ShowQuote from '../ShowQuote';
-import UpdateQuote from '../UpdateQuote';
 import icons from 'glyphicons'
 import Login from '../Login';
 import Signup from '../Signup';
+import Event from '../Event';
+import NewEvent from '../Event/eventNew';
 
-import { getActualUser, loginUser } from '../../db/users';
+import Container from '../utils/Container';
+import Button from '../utils/Button';
+
+import { getUserById, loginUser } from '../../db/users';
 
 class Layout extends Component {
 
@@ -26,7 +28,7 @@ class Layout extends Component {
 
   actualUser = async userId => {
     //Load actual user
-    const user = await getActualUser(userId);
+    const user = await getUserById(userId);
     this.setState({ user });
   }
 
@@ -59,38 +61,55 @@ class Layout extends Component {
   render() {
     const { user } = this.state;
 
-    let isConnected = <Link className={css(styles.navLink)} to="/login">Connexion</Link>
-    if (user) isConnected = <p>Bienvenue {user.username} <button onClick={this.logout} className={css(styles.navLink)} to="/login">Déconnexion</button></p>
+    let isConnected =
+      <span className={css(styles.userBox)}>
+        <Link to="/login"><Button content='Connexion' /></Link>
+      </span>
+    if (user) isConnected =
+      <span className={css(styles.userBox)}>
+        <span>Bienvenue {user.username}</span>
+        <Button onClick={this.logout} style={styles.logButton} content='Déconnexion' />
+      </span>
 
 
     return (
       <div className={css(styles.app)}>
         <header className={css(styles.appHeader)}>
           <div className={css(styles.smallHeader)}>
-            <a className={css(styles.smallHeaderLink)} href="https://github.com/ValentinKajdan/ReactCRUD" target="_blank">
-              <img className={css(styles.smallHeaderImg)} src="/img/githubWhite.png" width="20"/> Sooonr - Join us to build the best!
+            <a className={css(styles.smallHeaderLink)} href="https://github.com/Sooonr/sooonr" target="_blank">
+              <img className={css(styles.smallHeaderImg)} src="/img/githubWhite.png" width="20"/> Sooonr - Join us on Github!
             </a>
             <span>
               Valentin Kajdan - Rudy Lantoarijaona - Antoine Lucas
             </span>
           </div>
-          <img className={css(styles.headerImg)} src="/img/sooonr.png" width="200"/>
           <nav className={css(styles.nav)}>
-            <Link className={css(styles.navLink)} to="/">Home</Link>
-            <Link className={css(styles.navLink)} to="/new">Add a quote</Link>
-            <Link className={css(styles.navLink)} to="/#">Agenda</Link>
-            <Link className={css(styles.navLink)} to="/signup">Sign Up</Link>
+            <Link to="/">
+              <img className={css(styles.headerImg)} src="/img/sooonr.png" width="50"/>
+            </Link>
+            <div className={css(styles.navLinks)}>
+              <Link className={css(styles.navLink)} to="/">Home</Link>
+              <Link className={css(styles.navLink)} to="/event/new">Add an event</Link>
+              <Link className={css(styles.navLink)} to="/#">Agenda</Link>
+              {!user &&
+                <Link className={css(styles.navLink)} to="/signup">Sign Up</Link>
+              }
+              {isConnected}
+            </div>
           </nav>
-          {isConnected}
         </header>
         <main>
           <Route path="/" exact component={Home} />
           <Route path="/login" exact render={()=><Login loginFunc={this.login} />} />
           <Route path="/signup" exact component={Signup} />
-          <Route path="/new" exact component={Quote} />
-          <Route path="/quote/:id" exact component={ShowQuote} />
-          <Route path="/quote/update/:id" exact component={UpdateQuote} />
+          <Route path="/event/:id" exact component={Event} />
+          <Route path="/event/new" exact render={()=><NewEvent user={user} />} />
         </main>
+        <footer className={css(styles.appFooter)}>
+          <Container>
+            This is the footer
+          </Container>
+        </footer>
       </div>
 
 
@@ -99,20 +118,16 @@ class Layout extends Component {
 }
 
 const styles = StyleSheet.create({
-    app: {
-      textAlign: 'center',
-    },
     smallHeader: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
       color: '#ffffff',
       fontSize: 12,
-      marginBottom: 10,
       padding: '0 20px',
       height: 35,
       width: '100%',
-      backgroundColor: '#000000',
+      backgroundColor: '#212121',
     },
     smallHeaderLink: {
       display: 'flex',
@@ -120,7 +135,6 @@ const styles = StyleSheet.create({
       color: '#ffffff',
       textDecoration: 'none',
       opacity: '0.7',
-      
       ':hover': {
         opacity: '1',
       }
@@ -129,37 +143,57 @@ const styles = StyleSheet.create({
       marginRight: 10,
     },
     headerImg: {
-      margin: '2%',
+      width: 100,
+      height: '100%'
     },
     appHeader: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       backgroundColor: 'white',
-      paddingBottom: 20,
       color: 'black',
       opacity: '1',
-      borderBottom: '0.5px solid #ffa70d',
+      boxShadow: '0 2px 2px rgba(0,0,0,.1)',
     },
     appTitle: {
       fontSize: '1.5em',
+      color: '#fff',
     },
     nav: {
       display: 'flex',
-      justifyContent: 'space-around',
-      
+      flexWrap: 'wrap',
+      width: '100%',
+      padding: '0 20px',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    navLinks: {
+      display: 'flex',
+      alignItems: 'center'
     },
     navLink: {
-      color: '#aaa',
+      color: '#212121',
       textDecoration: 'none',
-      textTransform: 'uppercase',
       marginRight: 25,
+      padding: '20px 0',
       ':hover': {
-        opacity: '0.8',
-               
+        opacity: '0.7',
       }
-      
     },
+    userBox: {
+      borderLeft: '1px solid #e0e0e0',
+      paddingLeft: 20,
+    },
+    logButton: {
+      marginLeft: 20
+    },
+    appFooter: {
+      height: 100,
+      padding: '20px 0',
+      backgroundColor: '#212121',
+      marginTop: 30,
+      color: '#fff',
+    }
 });
 
 export default Layout;

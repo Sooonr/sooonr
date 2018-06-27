@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var EventsSchema = new Schema({
-	creator: {type: Schema.Types.ObjectId, ref: 'Users'},
+var EventSchema = new Schema({
+		creator: { type: String, required: true },
     title: String,
     date: Date,
     description: String,
@@ -10,9 +10,8 @@ var EventsSchema = new Schema({
     createdAt: { type: Date, default: Date.now },
    	updatedAt: { type: Date, default: Date.now },
     deletedAt: { type: Date },
-    participants:[
-      {type: Schema.Types.ObjectId, ref: 'Users'}
-    ]
+    participants: [{type: String}],
+		imgUrl: String,
 });
 
-module.exports = mongoose.model('Events', EventsSchema);
+module.exports = mongoose.model('Event', EventSchema);
