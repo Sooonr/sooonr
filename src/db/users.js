@@ -31,3 +31,28 @@ export const loginUser = async (username, password) => {
     console.log(e);
   }
 }
+
+export const updateUser = async (username, email, firstname, lastname, userId) => {
+  try {
+    const res = await axios.post('http://localhost:3001/api/user/update/'+userId, {
+      username,
+      email,
+      firstname,
+      lastname
+    });
+
+    if (res.data.error) {
+      return {
+        error: true,
+        message: res.data.message
+      }
+    } else {
+      return {
+        error: false,
+        user: res.data.user
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+}

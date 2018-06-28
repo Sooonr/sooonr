@@ -9,6 +9,7 @@ import ShowQuote from '../ShowQuote';
 import UpdateQuote from '../UpdateQuote';
 import Login from '../Login';
 import Signup from '../Signup';
+import User from '../User';
 
 import { getActualUser, loginUser } from '../../db/users';
 
@@ -87,6 +88,7 @@ class Layout extends Component {
           <Route path="/new" exact component={Quote} />
           <Route path="/quote/:id" exact component={ShowQuote} />
           <Route path="/quote/update/:id" exact component={UpdateQuote} />
+          <Route path="/profil" exact component={User} />
         </main>
       </div>
     );

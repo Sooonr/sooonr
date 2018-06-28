@@ -246,3 +246,22 @@ router.route('/login')
           res.json({ message: 'User successfully added!' });
       });
   });
+
+router.route('/user/update/:id')
+  //retrieve a user from the database by id
+.post(function(req, res) {
+  const id = req.originalUrl.split('/')[4];
+   //body parser lets us use the req.body
+  User.findById(id, function(err, user) {
+    if (err)
+      res.send(err);
+    user.name = req.body.name;
+    user.login = req.body.login;
+    user.email = req.body.email;
+    user.save(function(err) {
+      if (err)
+        res.send(err);
+      res.json({ message: 'User successfully updated!' });
+    });
+  });
+});
