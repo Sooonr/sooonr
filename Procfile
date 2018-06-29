@@ -1,2 +1,2 @@
-web: react-scripts start
-api: nodemon server.js
+web:  cd client && npm start
+api: cd server && npm start
