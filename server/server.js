@@ -34,7 +34,7 @@ router.get('/', function(req, res) {
  res.json({ message: 'API Initialized!'});
 });
 
-app.use('/api', router);
+app.use('/', router);
 
 app.listen(port, function() {
  console.log(`api running on port ${port}`);

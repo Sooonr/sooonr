@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { getUserById } from './users';
 
-const localEndpoint = 'http://localhost:3001/api';
-const prodEndpoint = 'http://51.68.121.118:3001/api';
+const localEndpoint = 'http://localhost:3001/';
+const prodEndpoint = 'https://api.sooonr.fr';
 
 export const getEvent = async idEvent => {
   try {
