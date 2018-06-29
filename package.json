@@ -15,7 +15,7 @@
   "description": "ReactCRUD is a basic full Javascript CRUD made with love by three french students and for the development of there main application Sooonr.",
   "scripts": {
     "start-dev": "nf start -p 3000",
-    "install-all": "npm install; cd server && npm install; cd ../client && npm install"
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
   },
   "main": "index.js",
   "repository": {
