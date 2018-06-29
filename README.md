@@ -30,7 +30,7 @@ In a second time, launch ReactCRUD :
 ```
 git clone https://github.com/Sooonr/ReactCRUD
 cd ReactCRUD
-npm install
+npm run install-all
 npm run start-dev
 ```
 Then go to localhost:3000 and here you go !
