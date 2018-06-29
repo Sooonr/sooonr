@@ -116,7 +116,7 @@ router.route('/quotes')
 
 router.route('/event/:id')
 .get(function(req, res) {
-    const id = req.originalUrl.split('/')[3];
+    const id = req.originalUrl.split('/')[2];
     Event.findById(ObjectId(id), function(err, event) {
       if (err)
         res.send(err);
@@ -126,7 +126,7 @@ router.route('/event/:id')
 
 router.route('/event/edit/:id')
 .post(function(req, res) {
-    const id = req.originalUrl.split('/')[4];
+    const id = req.originalUrl.split('/')[3];
     Event.findById(ObjectId(id), function(err, event) {
       if (err) res.send(err);
       event.title = req.body.title;
@@ -255,9 +255,10 @@ router.route('/login')
   router.route('/user/:id')
   //retrieve a user from the database by id
   .get(function(req, res) {
-      const id = req.originalUrl.split('/')[3];
+      const id = req.originalUrl.split('/')[2];
+      console.log(id);
       //looks at our User Schema
-      User.findById(ObjectId(id), function(err, user) {
+      User.findById(id, function(err, user) {
         if (err)
           res.send(err);
           //responds with a json object of our database quotes.
