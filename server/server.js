@@ -8,6 +8,7 @@ var Event = require('./model/event');
 var Follow = require('./model/follow');
 var Register = require('./model/register');
 var User = require('./model/user');
+var ObjectId = require('mongodb').ObjectID;
 
 var app = express();
 var router = express.Router();
@@ -116,7 +117,7 @@ router.route('/quotes')
 router.route('/event/:id')
 .get(function(req, res) {
     const id = req.originalUrl.split('/')[3];
-    Event.findById(id, function(err, event) {
+    Event.findById(ObjectId(id), function(err, event) {
       if (err)
         res.send(err);
         res.json(event)
@@ -126,7 +127,7 @@ router.route('/event/:id')
 router.route('/event/edit/:id')
 .post(function(req, res) {
     const id = req.originalUrl.split('/')[4];
-    Event.findById(id, function(err, event) {
+    Event.findById(ObjectId(id), function(err, event) {
       if (err) res.send(err);
       event.title = req.body.title;
       event.description = req.body.description;
@@ -256,7 +257,7 @@ router.route('/login')
   .get(function(req, res) {
       const id = req.originalUrl.split('/')[3];
       //looks at our User Schema
-      User.findById(id, function(err, user) {
+      User.findById(ObjectId(id), function(err, user) {
         if (err)
           res.send(err);
           //responds with a json object of our database quotes.
