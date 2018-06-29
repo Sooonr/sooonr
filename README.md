@@ -4,7 +4,7 @@ ReactCRUD is a basic full Javascript CRUD made with love by three french student
 
 ## Features
 
-The CRUD is a management system for quotes. A quote has an anthor and some content.
+The CRUD is a management system for quotes. A quote has an author and some content.
 
 1. List all the quotes (homepage)
 2. Create a new quote (/new)
@@ -14,7 +14,7 @@ The CRUD is a management system for quotes. A quote has an anthor and some conte
 
 ## Getting Started
 
-Follow these instructions to have a fonctionnal version of ReactCRUD on your local.
+Follow these instructions to have a functional version of ReactCRUD on your local.
 
 ### Requirements
 
@@ -30,12 +30,12 @@ In a second time, launch ReactCRUD :
 ```
 git clone https://github.com/Sooonr/ReactCRUD
 cd ReactCRUD
-npm install
+npm run install-all
 npm run start-dev
 ```
 Then go to localhost:3000 and here you go !
 
-The command `npm run start-dev` lauch both the React project and the Express API which is linked to your MongoDB.
+The command `npm run start-dev` launch both the React project and the Express API which is linked to your MongoDB.
 
 The production build is coming soon.
 
@@ -52,4 +52,4 @@ The production build is coming soon.
 * Antoine Lucas - *Developer*
 * Valentin Kajdan - *Developer*
 
-**Join us to build the most powerfull CRUD based on ReactJS !**
+**Join us to build the most powerful CRUD based on ReactJS !**

@@ -1,0 +1,34 @@
+{
+  "name": "sooonr",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "1.1.0"
+  },
+  "dependencies": {
+    "aphrodite": "^1.2.5",
+    "axios": "^0.17.1",
+    "draft-js": "^0.10.5",
+    "draftjs-to-html": "^0.8.4",
+    "glyphicons": "^0.2.0",
+    "html-to-draftjs": "^1.4.0",
+    "marked": "^0.3.12",
+    "moment": "^2.22.2",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-datepicker": "^1.5.0",
+    "react-dom": "^16.2.0",
+    "react-draft-wysiwyg": "^1.12.13",
+    "react-router-dom": "^4.2.2"
+  },
+  "peerDependencies": {
+    "draft-js": "^0.10.0",
+    "immutable": "^4.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
