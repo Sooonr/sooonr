@@ -6,7 +6,7 @@ const prodEndpoint = 'http://51.68.121.118:3001/api';
 
 export const getEvent = async idEvent => {
   try {
-    const res = await axios.get(prodEndpoint + '/event/' + idEvent);
+    const res = await axios.get(localEndpoint + '/event/' + idEvent);
     console.log(res);
     if (res.data._id) {
       const creator = await getUserById(res.data.creator);
@@ -27,7 +27,7 @@ export const getEvent = async idEvent => {
 
  export const editEvent = async event => {
    try {
-     const res = await axios.post(prodEndpoint + '/event/edit/' + event._id, {
+     const res = await axios.post(localEndpoint + '/event/edit/' + event._id, {
        title: event.title,
        description: event.description,
        updatedAt: event.updatedAt,

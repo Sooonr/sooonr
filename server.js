@@ -26,8 +26,8 @@ app.use(function(req, res, next) {
  next();
 });
 
-// mongoose.connect('mongodb://localhost:27017/sooonr');
-mongoose.connect('mongodb://sooonr:esgipa2018@ds221631.mlab.com:21631/sooonr');
+mongoose.connect('mongodb://localhost:27017/sooonr');
+// mongoose.connect('mongodb://sooonr:esgipa2018@ds221631.mlab.com:21631/sooonr');
 
 router.get('/', function(req, res) {
  res.json({ message: 'API Initialized!'});
