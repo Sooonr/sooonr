@@ -31,6 +31,7 @@ class Home extends Component {
     if (data.length > 0) {
       return (
       <div>
+        
        {/*<SearchBar />*/}
         <div className={css(styles.searchContainer)}>
         <form className={css(styles.formSearchContainer)} >
