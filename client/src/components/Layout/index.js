@@ -38,7 +38,10 @@ class Layout extends Component {
     this.setState({ user: null})
   }
 
+  
   login = async (username, password) => {
+    console.log(username);
+  console.log(password);
     //Loin user
     const isLogin = await loginUser(username, password);
 
@@ -60,7 +63,7 @@ class Layout extends Component {
 
   render() {
     const { user } = this.state;
-
+    console.log(user);
     let isConnected =
       <span className={css(styles.userBox)}>
         <Link to="/login"><Button content='Connexion' /></Link>
