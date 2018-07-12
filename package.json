@@ -11,8 +11,7 @@
     "bcrypt": "^2.0.1",
     "body-parser": "^1.18.2",
     "cloudinary-react": "^1.0.6",
-    "express": "^4.16.2",
-    "foreman": "^2.0.0",
+    "express": "^4.16.2",    
     "glyphicons": "^0.2.0",
     "marked": "^0.3.12",
     "mongoose": "^5.0.4",
@@ -22,13 +21,28 @@
     "react-dom": "^16.2.0",
     "react-dropzone": "^4.2.11",
     "react-router-dom": "^4.2.2",
-    "superagent": "^3.8.3"
+    "superagent": "^3.8.3",
+    "draft-js": "^0.10.5",
+    "foreman": "^3.0.1"
   },
+  "peerDependencies": {
+    "draft-js": "^0.10.0",
+    "immutable": "^4.0.0"
+  },
+  "description": "ReactCRUD is a basic full Javascript CRUD made with love by three french students and for the development of there main application Sooonr.",
   "scripts": {
-    "start": "react-scripts start",
     "start-dev": "nf start -p 3000",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install"
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sooonr/sooonr.git"
+  },
+  "author": "",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/Sooonr/sooonr/issues"
+  },
+  "homepage": "https://github.com/Sooonr/sooonr#readme"
 }
