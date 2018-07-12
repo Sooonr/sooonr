@@ -55,13 +55,7 @@ class Login extends Component {
             <button type="submit">Connexion </button>
           </form>
           <p>{message}</p>
-<<<<<<< HEAD:src/components/Login/index.js
-
-        
-        </div>
-=======
         </Container>
->>>>>>> dev:client/src/components/Login/index.js
       );
   }
 }
