@@ -14,7 +14,7 @@ class Home extends Component {
    };
 
    loadQuotesFromServer = () => {
-     axios.get('http://localhost:3001/api/quotes')
+     axios.get('http://localhost:3001/api/events')
      .then(res => {
        this.setState({ data: res.data, loading: false });
      })
@@ -58,7 +58,7 @@ class Home extends Component {
        {
               this.state.data.map((quote, key) =>  
               /*<ListEvent key={key} _id={quote._id}  name={quote.name} quote={quote.quote}/>*/
-              <Link key={key}className={css(styles.link)} to={`/quote/${quote._id}`}>
+              <Link key={key}className={css(styles.link)} to={`/event/${quote._id}`}>
               <div className={css(styles.eventCard)}>
                   <div className={css(styles.colorOverlay)}>
                     <div className={css(styles.eventShare)}>
@@ -74,11 +74,11 @@ class Home extends Component {
                     </div>                   
                     <div className={css(styles.eventContent)}>         
                       <div className={css(styles.eventHeader)}>
-                        <h3 className={css(styles.eventTitle)}>{icons.calendar} {quote.name}</h3>
-                        <h4 className={css(styles.eventLieu)}>{icons.mapMarker}242 Faubourg Saint Antoine, Paris 75012</h4>
+                        <h3 className={css(styles.eventTitle)}>{icons.calendar} {quote.title}</h3>
+                        <h4 className={css(styles.eventLieu)}>{icons.mapMarker}{quote.adress}</h4>
                       </div>
-                        <p className={css(styles.eventDetails)}>{quote.quote}</p>
-                        <Link className={css(styles.linkBtn)} to={`/quote/${quote._id}`}>Show</Link>
+                        <p className={css(styles.eventDetails)}>{quote.description}</p>
+                        <Link className={css(styles.linkBtn)} to={`/event/${quote._id}`}>Show</Link>
                     </div>	
                     <div className={css(styles.eventImg)}>
                           <img className={css(styles.headerImg)} src="/img/sooonr.png" width="200"/>
