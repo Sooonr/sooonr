@@ -34,6 +34,10 @@ class Home extends Component {
         
        {/*<SearchBar />*/}
         <div className={css(styles.searchContainer)}>
+        <div className={css(styles.about)}>
+        Sooonr est une application permettant à des artistes de rue de se faire connaitre Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
         <form className={css(styles.formSearchContainer)} >
           <input className={css(styles.inputSearchBar)} type="text"  id="search-bar" name="name" placeholder="Rechercher un évenement" ></input>
           <a className={css(styles.Link)} href="#">
@@ -42,13 +46,14 @@ class Home extends Component {
         </form>
         <select className={css(styles.linkBtn)} >
           <option value="valeur1">Tri par date</option> 
-          <option value="valeur2" selected> Plus récents</option>
+          <option value="valeur2" > Plus récents</option>
           <option value="valeur3">Plus anciens</option>
         </select>
         <select className={css(styles.linkBtn)} >
           <option value="valeur1">Tri par type</option> 
-          <option value="valeur2" selected>Plus anciens</option>
-          <option value="valeur3">Passé</option>
+          <option value="valeur2">Sport</option>
+          <option value="valeur3">Musique</option>
+          <option value="valeur4">Art</option>
         </select>
       </div> 
       
@@ -58,7 +63,7 @@ class Home extends Component {
        {
               this.state.data.map((quote, key) =>  
               /*<ListEvent key={key} _id={quote._id}  name={quote.name} quote={quote.quote}/>*/
-              <Link key={key}className={css(styles.link)} to={`/event/${quote._id}`}>
+              <Link key={key}className={css(styles.link)} to={`/event/show/${quote._id}`}>
               <div className={css(styles.eventCard)}>
                   <div className={css(styles.colorOverlay)}>
                     <div className={css(styles.eventShare)}>
@@ -76,12 +81,14 @@ class Home extends Component {
                       <div className={css(styles.eventHeader)}>
                         <h3 className={css(styles.eventTitle)}>{icons.calendar} {quote.title}</h3>
                         <h4 className={css(styles.eventLieu)}>{icons.mapMarker}{quote.adress}</h4>
+                        <h4 className={css(styles.eventLieu)}>Par {icons.mapMarker}{quote.creator}</h4>
+
                       </div>
                         <p className={css(styles.eventDetails)}>{quote.description}</p>
-                        <Link className={css(styles.linkBtn)} to={`/event/${quote._id}`}>Show</Link>
+                        <Link className={css(styles.linkBtn)} to={`/event/show/${quote._id}`}>Show</Link>
                     </div>	
                     <div className={css(styles.eventImg)}>
-                          <img className={css(styles.headerImg)} src="/img/sooonr.png" width="200"/>
+                          <img className={css(styles.headerImg)} src={quote.imgUrl} />
                     </div>	                         
                 </div>
               </div>
@@ -93,7 +100,39 @@ class Home extends Component {
 
       <div className={css(styles.eventSidebar)}>
          TOP EVENTS
+         <div className={css(styles.content)}>
+  <div className={css(styles.text_box_main)}>
+   <p className={css(styles.body_text_header)}>TOP EVENT</p>
+   <div className={css(styles.body_code_main)}>
+   <div className={css(styles.eventCardList)}>
+     
+                 
+            <Link className={css(styles.link)} to={`/quote/1`}>
+            <div className={css(styles.eventCard)}>
+                <div className={css(styles.colorOverlay)}>                                  
+                  <div className={css(styles.eventContent)}>         
+                    <div className={css(styles.eventHeader)}>
+                      <h1 className={css(styles.eventTitle)}>{icons.calendar} Test</h1>
+                      <h4 className={css(styles.eventLieu)}>{icons.mapMarker}242 Faubourg Saint Antoine, Paris 75012</h4>
+                    </div>
+                      <p className={css(styles.eventDetails)}>details</p>
+                      <Link className={css(styles.linkBtn)} to={`/quote/1`}>Show</Link>
+                  </div>	
+                  <div className={css(styles.eventImg)}>
+                        <img className={css(styles.headerImg)} src="/img/sooonr.png" width="200"/>
+                  </div>	                         
+              </div>
+            </div>
+            </Link>
+            
+           
+          
+     </div> 
 
+   </div>
+   </div>
+   </div>
+     
 
            <div className={css(styles.eventCardList)}>
      
@@ -241,7 +280,6 @@ const styles = StyleSheet.create({
     position: 'relative',   
     paddingRight:'1em',
     borderRight: 'double',
-    padding: '15%',
     color: '#434343',
     borderRadius: '8px',   
     width: '60%',
@@ -270,7 +308,50 @@ const styles = StyleSheet.create({
   },
   eventTitle: {
     textTransform: 'uppercase',
-  }
+    fontSize:"14px",
+  },
+  eventLieu: {
+    fontSize: "11px",
+  },
+  headerImg: {
+    width: '100%',
+    height: '100%',
+  },
+  about: {
+    margin: '3%',
+  },content: {
+    marginTop:'5%',
+    top:'200px',
+    textAlign:'center',
+    opacity:1,
+  },
+  text_box_main: {
+    width:'500px',
+    margin:'auto',
+    marginBottom:'50px',
+    boxShadow:'0px 4px 20px rgba(0, 0, 0, 0.15)',
+    padding:'10px',
+  },
+  body_text_header: {
+    color:'#191919',
+    
+    fontWeight:700,
+    opacity:0.6,
+    borderStyle:'groove',
+    borderTop:'none',
+    borderLeft:'none',
+    borderRight:'none',
+    padding:'17px',
+    width:'100px',
+    margin:'auto',
+    borderWidth:'1px',
+  },
+  
+  body_code_main: {
+    padding:'10px',
+    margin:'10px',
+    display:'inline-block',
+  },
    
 });
 
