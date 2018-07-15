@@ -30,16 +30,21 @@ class Event extends Component {
     errorCode: null,
     errorMessage: null,
     event: {},
-    editMode: false,
+    editMode: true,
    };
 
   componentDidMount = () => {
-    const idEvent = this.props.location.pathname.split('/')[2];
+    console.log(this.props.location.pathname.split('/')[3]);
+    const idEvent = this.props.location.pathname.split('/')[3];
     this.getCurrentEvent(idEvent);
   }
 
   getCurrentEvent = async idEvent => {
+    console.log('Id Event : '+ idEvent);
     const event = await getEvent(idEvent);
+  
+    console.log('EVENT : ' + event);
+    console.log(event);
     const contentState = ContentState.createFromBlockArray(htmlToDraft(event.description).contentBlocks);
     const editorState = EditorState.createWithContent(contentState);
     if (event.error) {
@@ -112,7 +117,11 @@ class Event extends Component {
 
     if (!loading) {
       userEvent = localStorage.getItem('userId') === event.creator._id && true;
-      creatorName = userEvent ? 'moi' : event.creator.name ? `${event.creator.name.first} ${event.creator.name.last}` : event.creator.username;
+
+      console.log(localStorage.getItem('userId'));
+      console.log(event.creator);
+      console.log(userEvent);
+      creatorName = userEvent ? 'moi' : event.creator.name /*event.creator*/ ? `${event.creator.name.first /*event.creator.value*/} ${event.creator.name.last /*event.creator*/}` : event.creator.username;
     }
 
     return (

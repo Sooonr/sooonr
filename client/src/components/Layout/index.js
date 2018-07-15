@@ -38,7 +38,10 @@ class Layout extends Component {
     this.setState({ user: null})
   }
 
+  
   login = async (username, password) => {
+    console.log(username);
+  console.log(password);
     //Loin user
     const isLogin = await loginUser(username, password);
 
@@ -60,7 +63,7 @@ class Layout extends Component {
 
   render() {
     const { user } = this.state;
-
+    console.log(user);
     let isConnected =
       <span className={css(styles.userBox)}>
         <Link to="/login"><Button content='Connexion' /></Link>
@@ -102,14 +105,15 @@ class Layout extends Component {
           <Route path="/" exact component={Home} />
           <Route path="/login" exact render={()=><Login loginFunc={this.login} />} />
           <Route path="/signup" exact component={Signup} />
-          <Route path="/event/:id" exact component={Event} />
+          <Route path="/event/show/:id" exact component={Event} />
           <Route path="/event/new" exact render={()=><NewEvent user={user} />} />
         </main>
         <footer className={css(styles.appFooter)}>
-          <Container>
-            This is the footer
-          </Container>
+          <div className={css(styles.white)}>
+            @2018 - Sooonr
+          </div>
         </footer>
+        
       </div>
 
 
@@ -193,6 +197,19 @@ const styles = StyleSheet.create({
       backgroundColor: '#212121',
       marginTop: 30,
       color: '#fff',
+    },
+    white: {
+      width: '100%',
+      maxWidth: 840,
+      height: '100%',
+      margin: 'auto',
+      paddingTop: 20,
+      color: '#fff',
+      textAlign: 'center',
+      // Tab
+      '@media (max-width: 860px)': {
+         padding: 20,
+      },
     }
 });
 

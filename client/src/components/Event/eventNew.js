@@ -4,6 +4,7 @@ import { StyleSheet, css } from 'aphrodite';
 import { Redirect } from 'react-router-dom';
 import 'moment/locale/fr';
 import moment from 'moment';
+import axios from 'axios';
 
 import { EditorState, convertFromRaw, convertToRaw, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
@@ -17,6 +18,7 @@ import Loader from '../utils/Loader';
 import Title from '../utils/Title';
 import Subtitle from '../utils/Subtitle';
 import Container from '../utils/Container';
+import Upload from '../Upload';
 
 class eventEdit extends Component {
 
@@ -62,15 +64,55 @@ class eventEdit extends Component {
     if (!updatedEvent.error) this.setState({ redirect: true })
   }
 
+  handleSubmitAdd = (creator, title, date, description, adress, createdAt,updatedAt,deletedAt,participants,imgUrl) =>{
+    const { event } = this.state;
+     //const {creator, title, date, description, adress, createdAt,updatedAt,deletedAt,participants,imgUrl } = event;
+     
+      axios.post('http://localhost:3001/api/events', {
+        creator,
+        title,
+        date,
+        description,
+        adress,
+        createdAt,
+         updatedAt,
+        deletedAt,
+        participants,
+        imgUrl,
+      })
+      .then(res => {
+        if (res.data.error) {
+          this.setState({ data: res.data })
+        } else {
+          this.setState({
+            data: res.data,
+            creator :'',
+            title:'',
+            date:'',
+            description:'',
+            adress:'',
+            createdAt:'',
+            updatedAt:'',
+            deletedAt:'',
+            participants:'',
+            imgUrl:'',
+            loading: false,
+            redirect: true,
+          });
+        }
+      })
+    
+  }
+
   render() {
 
-    if (!localStorage.getItem('userId')) return <Container>Access Denied</Container>
+    if (!localStorage.getItem('userId')) return <Container>Vous devez être connecté pour accéder à cette page</Container>
 
     const { user } = this.props;
     const { event, loading, editorState, contentState, redirect } = this.state;
     console.log(user);
-
-    if (redirect) return <Redirect to={`/event/${event._id}`} />;
+    console.log(localStorage.getItem('userId'));
+    if (redirect) return <Redirect to={`/event/show/${event._id}`} />;
 
     moment.locale('fr');
 
@@ -81,14 +123,22 @@ class eventEdit extends Component {
               className={css(styles.headerImg)}
               style={{ backgroundColor: 'grey' }}
             />
-            <Container>
+            <div className={css(styles.content)}>
+  <div className={css(styles.text_box_main)}>
+   <p className={css(styles.body_text_header)}>Créer un évenement</p>
+   <div className={css(styles.body_code_main)}>
+
+    <Container>
               <div>
+                <form onSubmit={this.handleSubmitAdd}>
                 <div className={css(styles.eventInfosBar)} >
                   <div className={css(styles.date)}>
-                    <input type='date' />
+                    <input type='date' className={css(styles.simple_large)} />
                   </div>
-                  <input type='text' name='title' placeholder='Name of the event' />
+                  <input className={css(styles.simple_large)} type='text' name='title' placeholder='Name of the event' />
                 </div>
+                <Upload></Upload>
+                
                 <div className={css(styles.eventCreator)} >
                   <span>Evènement créé par <strong>moi</strong> le {moment().format("Do MMMM YYYY")}. </span>
                 </div>
@@ -105,11 +155,18 @@ class eventEdit extends Component {
                 </div>
                 <div className={css(styles.eventDescription)}>
                   <Subtitle content="Localisation" />
-                  <input name="adress" type="text" placeholder='Event adress' onChange={this.updateContent} />
+                  <input name="adress" type="text" className={css(styles.simple_large)} placeholder='Event adress' onChange={this.updateContent} />
                 </div>
-                <button onClick={this.handleSubmit}>Enregistrer !!</button>
+                <button onClick={this.handleSubmit} className={css(styles.submit)}>Enregistrer</button>
+                </form>
               </div>
             </Container>
+
+   </div>
+   </div>
+   </div>
+            
+           
           </div>
         </div>
     )
@@ -182,7 +239,73 @@ const styles = StyleSheet.create({
       background: 'white',
       flexWrap: 'wrap',
       marginBottom: 5,
-    }
+    },
+    content: {
+      marginTop:'5%',
+      top:'200px',
+      textAlign:'center',
+      opacity:1,
+    },
+    text_box_main: {
+      width:'600px',
+      margin:'auto',
+      marginBottom:'50px',
+      boxShadow:'0px 4px 20px rgba(0, 0, 0, 0.15)',
+      padding:'10px',
+    },
+    body_text_header: {
+      color:'#191919',
+      
+      fontWeight:700,
+      opacity:0.6,
+      borderStyle:'groove',
+      borderTop:'none',
+      borderLeft:'none',
+      borderRight:'none',
+      padding:'17px',
+      width:'100%',
+      margin:'auto',
+      borderWidth:'1px',
+    },
+    simple_large: {
+      borderRadius:'5px',
+      padding:'10px',
+      width:'240px',
+      overflow:'hidden',
+      borderStyle:'groove',
+      opacity:'0.5',      
+      fontWeight:400,
+      fontSize:'16px',
+      position:'relative',
+      margin:'5px',
+      ':focus': {
+        outline:'none',
+        opacity:'0.7',
+      }
+    },
+    body_code_main: {
+      padding:'10px',
+      margin:'10px',
+      display:'inline-block',
+    },
+    submit: {
+      color: '#fff',
+      backgroundColor: '#f2f2f2',
+      fontSize: 14,
+      textTransform: 'uppercase',
+      padding: '10px 16px',
+      border: 'none',
+      cursor: 'pointer',
+      backgroundColor: '#604c8d',
+      boxShadow: '0 2px 5px 0 rgba(0, 0, 0, 0.225)',
+      transition: 'all .3s ease-out',
+      marginTop: '10%',
+      ':hover': {
+        backgroundColor: '#856bbf',
+        boxShadow: '0 4px 10px 0px rgba(0, 0, 0, 0.225)'
+      }
+    },
+    
 });
 
 export default eventEdit;

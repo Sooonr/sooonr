@@ -3,13 +3,22 @@ import { getUserById } from './users';
 
 export const getEvent = async idEvent => {
   try {
-    const res = await axios.get('http://localhost:3001/api/event/' + idEvent);
+    const res = await axios.get('http://localhost:3001/api/event/' + idEvent); 
+     /*const res = await axios.get('http://localhost:3001/api/events/'); */
     console.log(res);
+    console.log(res.data.creator);
+    console.log(res.data._id);
     if (res.data._id) {
       const creator = await getUserById(res.data.creator);
       res.data.creator = creator;
       res.data.error = false;
-      return res.data;
+      
+      res.data;
+
+      return;
+
+     
+
     } else {
       return {
         error: true,
@@ -17,6 +26,7 @@ export const getEvent = async idEvent => {
         errorMessage: 'No events found'
       }
     }
+    
   } catch (e) {
     console.log(e);
   }
