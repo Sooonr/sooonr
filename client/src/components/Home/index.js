@@ -35,8 +35,8 @@ class Home extends Component {
        {/*<SearchBar />*/}
         <div className={css(styles.searchContainer)}>
         <div className={css(styles.about)}>
-        Sooonr est une application permettant à des artistes de rue de se faire connaitre Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        
+        SOOONR est une application innovante permettant à des artistes de rue de se faire connaitre. L'idée est venu lorsqu'on a vu comment rues regorgent d'artistes qui selon nous meriterai d'être mis en avant. C'est pourquoi depuis cette application il est possible de créer des évenements, de suivre les évenements et voter pour les meilleures évenements.
         </div>
         <form className={css(styles.formSearchContainer)} >
           <input className={css(styles.inputSearchBar)} type="text"  id="search-bar" name="name" placeholder="Rechercher un évenement" ></input>
@@ -99,7 +99,7 @@ class Home extends Component {
        </div>
 
       <div className={css(styles.eventSidebar)}>
-         TOP EVENTS
+         Nos meilleurs events
          <div className={css(styles.content)}>
   <div className={css(styles.text_box_main)}>
    <p className={css(styles.body_text_header)}>TOP EVENT</p>

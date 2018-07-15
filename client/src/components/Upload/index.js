@@ -28,17 +28,19 @@ class Upload extends Component{
         this.setState({
           uploadedFile: files[0]
         });
-        this.handleImageUpload(files[0]);      
+        console.log(localStorage.getItem('userId'))
+        this.handleImageUpload(files[0],localStorage.getItem('userId'));      
+        //this.getImage(localStorage.getItem('userId'));
      }
 
 
-      handleImageUpload(file) {
+      handleImageUpload(file,userId) {
          let upload = request.post(CLOUDINARY_UPLOAD_URL)
                             .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
                             .field('file', file)
                             .field('folder','test/user')
                             .field('resource_type','image')
-                            .field('tags','test');
+                            .field('tags',userId);
                             /* .field('resource_type','image'); */ 
 
      /*    const params = new URLSearchParams();
@@ -66,7 +68,8 @@ class Upload extends Component{
       }
 
       getImage(userId){
-        axios.get('http://res.cloudinary.com/sooonr/image/list/{$userId}.json') 
+        console.log(userId);
+        axios.get('http://res.cloudinary.com/sooonr/image/list/'+ userId +'.json') 
         .then(res => {
         console.log(res.data.ressources);
         this.setState({gallery: res.data.resources}); 
@@ -76,7 +79,7 @@ class Upload extends Component{
     render() {
         return(
           <div>
-          <CloudinaryContext cloudName="sooonr">
+         {  <CloudinaryContext cloudName="sooonr">
                         {
                             this.state.gallery.map(data => {
                                 return (
@@ -99,7 +102,7 @@ class Upload extends Component{
                                 )
                             })
                         }
-                    </CloudinaryContext>
+                    </CloudinaryContext> }
           <form>
             <Image folder="test/" >
 
@@ -109,7 +112,7 @@ class Upload extends Component{
               onDrop={this.onImageDrop.bind(this)}
               multiple={true}
               accept="image/*,video/*">
-              <div>Drop an image /a video or click to select a file to upload.</div>
+              <div>Glisser une image ou cliquer ici pour choisir une image a importé</div>
             </Dropzone>
           </div>
   
@@ -120,7 +123,7 @@ class Upload extends Component{
             <div>
               <p>{this.state.uploadedFile.name}</p>
               
-              <img src={this.state.uploadedFileCloudinaryUrl} />
+              <img src={this.state.uploadedFileCloudinaryUrl} width="500"/>
             </div>}
           </div>
         </form>

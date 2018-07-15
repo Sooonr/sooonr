@@ -14,7 +14,7 @@ class ListEvent extends Component {
         return(<div className={css(styles.eventCardList)}>
         {
                this.state.data.map((props, key) =>             
-               <Link key={key} className={css(styles.link)} to={`/quote/${props._id}`}>
+               <Link key={key} className={css(styles.link)} to={`/event/${props._id}`}>
                <div className={css(styles.eventCard)}>
                    <div className={css(styles.colorOverlay)}>                                   
                      <div className={css(styles.eventContent)}>         
@@ -26,7 +26,7 @@ class ListEvent extends Component {
                          <div className={css(styles.eventShare)}>
                     
                      </div>     
-                         <Link className={css(styles.linkBtn)} to={`/quote/${props._id}`}>Show</Link>
+                         <Link className={css(styles.linkBtn)} to={`/event/${props._id}`}>Show</Link>
                      </div>	
                      <div className={css(styles.eventImg)}>
                            <img className={css(styles.headerImg)} src="/img/sooonr.png" width="200"/>

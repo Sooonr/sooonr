@@ -154,6 +154,12 @@ router.route('/events')
     event.description = req.body.description;
     event.title = req.body.title;
     event.creator = req.body.creator;
+    event.adress = req.body.adress;
+    event.createdAt = req.body.createdAt;
+    event.updatedAt = req.body.updatedAt;
+    event.deletedAt = req.body.deletedAt;
+    event.participants = req.body.participants;
+    event.imgUrl = req.body.imgUrl;    
     event.save(function(err) {
         if (err) {
             res.send(err);
